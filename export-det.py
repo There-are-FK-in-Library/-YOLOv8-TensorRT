@@ -12,13 +12,14 @@ try:
 except ImportError:
     onnxsim = None
 
-
+# python export-det.py --weights ./engine/best.pt --iou-thres 0.65 --conf-thres 0.25 --topk 100 --opset 11 --sim --input-shape 1 3 640 640 --device cuda:0
 def parse_args():
     parser = argparse.ArgumentParser()
     parser.add_argument('-w',
                         '--weights',
                         type=str,
-                        required=True,
+                        default=r'D:\WJ\VS_workspace\yolov8_detection_4060\weights\best_PR_doing.pt',
+                        # required=True,
                         help='PyTorch yolov8 weights')
     parser.add_argument('--iou-thres',
                         type=float,
@@ -26,7 +27,7 @@ def parse_args():
                         help='IOU threshoud for NMS plugin')
     parser.add_argument('--conf-thres',
                         type=float,
-                        default=0.25,
+                        default=0.4,
                         help='CONF threshoud for NMS plugin')
     parser.add_argument('--topk',
                         type=int,
@@ -37,6 +38,7 @@ def parse_args():
                         default=11,
                         help='ONNX opset version')
     parser.add_argument('--sim',
+                        default=True,
                         action='store_true',
                         help='simplify onnx model')
     parser.add_argument('--input-shape',
@@ -46,7 +48,7 @@ def parse_args():
                         help='Model input shape only for api builder')
     parser.add_argument('--device',
                         type=str,
-                        default='cpu',
+                        default='cuda:0',
                         help='Export ONNX device')
     args = parser.parse_args()
     assert len(args.input_shape) == 4
